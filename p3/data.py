@@ -205,6 +205,17 @@ WAY_NODES_FIELDS = ['id', 'node_id', 'position']
 
 
 def update_phone(phone_num):
+  '''
+  checks is a phone number matches the desired pattern, and if not, updates the phone number
+  to the correct pattern
+  >>> update_phone(02213456789)
+  +49 221 3456789
+
+  Args: phone_num(string): phone number to be checked
+  Returns:
+    string: phone number with correct pattern
+    None if phone number still does not match the pattern after a series of correcting steps 
+  '''
   m = phone_re.search(phone_num)
   if not m:
     # remove all dashes
@@ -254,15 +265,16 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
     
     if element.tag == 'node':
         # creating the dictionary for the node key
-        for item in NODE_FIELDS:
+        for item in node_attr_fields:
             node_attribs[item] = element.attrib[item]
         # create the list of dictionaries for the node_tags key
         for tag in element.findall('tag'):
             entry = {}
             entry['id'] = node_attribs['id']
             if tag.attrib['k'] == 'phone' or tag.attrib['k'] == 'contact:phone':
-              if update_phone(tag.attrib['v']):
-                entry['value'] = update_phone(tag.attrib['v'])
+              result = update_phone(tag.attrib['v'])
+              if result:
+                entry['value'] = result
               else:
                 continue
             elif tag.attrib['k'] == 'addr:postcode':
@@ -283,7 +295,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
               entry['value'] = tag.attrib['v']
 
             # get the match objects for problem and colon characters
-            m = PROBLEMCHARS.search(tag.attrib['k'])
+            m = problem_chars.search(tag.attrib['k'])
             t = LOWER_COLON.search(tag.attrib['k'])
             # check if it has problem characters
             if m:
@@ -294,7 +306,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
               entry['type'] = tag.attrib['k'].split(':',1)[0]
             else:
               entry['key'] = tag.attrib['k']
-              entry['type'] = 'regular'
+              entry['type'] = default_tag_type
                 
 
             
@@ -302,15 +314,16 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
             
     if element.tag == 'way':
         # creating the dictionary for the way key
-        for item in WAY_FIELDS:
+        for item in way_attr_fields:
             way_attribs[item] = element.attrib[item]
         # create the list of dictionaries for the way_tags key
         for tag in element.findall('tag'):
             entry = {}
             entry['id'] = way_attribs['id']
             if tag.attrib['k'] == 'phone' or tag.attrib['k'] == 'contact:phone':
-              if update_phone(tag.attrib['v']):
-                entry['value'] = update_phone(tag.attrib['v'])
+              result = update_phone(tag.attrib['v'])
+              if result:
+                entry['value'] = result
               else:
                 continue
             elif tag.attrib['k'] == 'addr:postcode':
@@ -329,7 +342,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
               entry['value'] = tag.attrib['v']
 
             # get the match objects for problem and colon characters
-            m = PROBLEMCHARS.search(tag.attrib['k'])
+            m = problem_chars.search(tag.attrib['k'])
             t = LOWER_COLON.search(tag.attrib['k'])
             # check if it has problem characters
             if m:
@@ -340,7 +353,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
               entry['type'] = tag.attrib['k'].split(':',1)[0]
             else:
               entry['key'] = tag.attrib['k']
-              entry['type'] = 'regular'
+              entry['type'] = default_tag_type
             
             tags.append(entry)
         # create the list of dictionaries for way_nodes   
