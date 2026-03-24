@@ -3,12 +3,12 @@
 P0
 
 
-P1
+## P1 - Compute statistics
 
 
-## P2 - Investigate a dataset
+## P2 - Investigate the Titanic dataset
 
-'Choose one of Udacity's curated datasets and investigate it using NumPy and Pandas. Go through the entire data analysis process, starting by posing a question and finishing by sharing your findings.'
+Chose one of Udacity's curated datasets and investigated it using NumPy and Pandas. Went through the entire data analysis process, starting by posing a question and finished by sharing my findings.'
 
 ## P3 - Wrangle OpenStreetMap data
 
