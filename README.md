@@ -1,10 +1,6 @@
 # Data Analyst Nanodegree Projects
 
-P0
-
-
 ## P1 - Compute statistics to visualize the Central Limit Theorem
-
 
 ## P2 - [Investigate the Titanic Dataset](https://diogoadaoesilva.github.io/Investigate+a+dataset.html)
 
